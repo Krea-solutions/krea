@@ -33,9 +33,9 @@ export default function Philosophy({ t }: { t: any }) {
 
     let t0 = 0;
     const colors = [
-      "rgba(77, 200, 255, 0.16)",
-      "rgba(37, 150, 255, 0.10)",
-      "rgba(255, 122, 45, 0.07)",
+      "rgba(77, 200, 255, 0.18)",
+      "rgba(37, 150, 255, 0.12)",
+      "rgba(255, 122, 45, 0.08)",
     ];
 
     const animate = () => {
@@ -76,9 +76,9 @@ export default function Philosophy({ t }: { t: any }) {
         ref={cvsRef}
         className="absolute inset-0 w-full h-full z-0 opacity-50 pointer-events-none"
       />
-      <div className="relative z-[1] max-w-[16ch] md:max-w-[20ch] mx-auto reveal">
+      <div className="relative z-[1] max-w-[680px] md:max-w-[900px] mx-auto reveal">
         <p
-          className="font-serif font-light text-[28px] md:text-[3.4vw] leading-[1.25] tracking-[-0.01em] text-balance"
+          className="font-serif font-light text-[26px] md:text-[44px] leading-[1.3] tracking-[-0.01em] text-balance px-2"
           dangerouslySetInnerHTML={{ __html: t.quote }}
         />
         <div className="mt-8 md:mt-12 font-mono text-[10px] md:text-[11px] tracking-[0.16em] text-ink-dim uppercase">
