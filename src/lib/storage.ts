@@ -118,27 +118,33 @@ if (!REDIS_URL || !REDIS_TOKEN) {
   throw new Error("Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN");
 }
 
-async function redis(command: string[]) {
-  const body = JSON.stringify(command);
-  const res = await fetch(REDIS_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${REDIS_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body,
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data.result;
-}
-
 const DEFAULT_SETTINGS: Settings = {
   notifyTelegram: true,
   autoReplyEnabled: false,
   emailFooter: "KREA · studio@krea.studio",
   updatedAt: new Date().toISOString(),
 };
+
+async function redis(command: string[]) {
+  const res = await fetch(REDIS_URL!, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
+    body: JSON.stringify(command),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Redis error: ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  // Upstash returns { result: ... } or { error: ... }
+  if ("error" in data) {
+    throw new Error(data.error);
+  }
+
+  return data.result;
+}
 
 export async function getLeads(): Promise<Lead[]> {
   const keys = await redis(["KEYS", "leads:*"]);
