@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -15,14 +15,22 @@ export default function LeadForm({ t, locale }: { t: any; locale: string }) {
   });
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [budgetOpen, setBudgetOpen] = useState(false);
+  const budgetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (budgetRef.current && !budgetRef.current.contains(e.target as Node)) {
+        setBudgetOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
 
   const onChange =
     (k: keyof typeof form) =>
-    (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >,
-    ) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm({ ...form, [k]: e.target.value });
     };
 
@@ -37,7 +45,6 @@ export default function LeadForm({ t, locale }: { t: any; locale: string }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
     if (!form.name.trim() || !form.contact.trim() || !form.message.trim()) {
       setError(t.required);
       return;
@@ -46,7 +53,6 @@ export default function LeadForm({ t, locale }: { t: any; locale: string }) {
       setError(t.invalidContact);
       return;
     }
-
     setStatus("sending");
     try {
       const res = await fetch("/api/leads", {
@@ -65,7 +71,6 @@ export default function LeadForm({ t, locale }: { t: any; locale: string }) {
           message: "",
           website: "",
         });
-        setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
         setError(data.error || t.error);
@@ -76,200 +81,204 @@ export default function LeadForm({ t, locale }: { t: any; locale: string }) {
     }
   };
 
-  if (status === "success") {
-    return (
-      <section
-        id="contact"
-        className="px-5 md:px-10 py-32 md:py-48 relative overflow-hidden text-center"
-      >
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full pointer-events-none z-0 pulse-bg"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(77,200,255,0.16), rgba(255,122,45,0.06) 40%, transparent 70%)",
-          }}
-        />
-        <div className="max-w-2xl mx-auto relative z-[1]">
-          <div
-            className="inline-block mb-8 p-4 border border-cyan/30 rounded-full"
-            style={{
-              background: "rgba(77,200,255,0.05)",
-              backdropFilter: "blur(20px)",
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="text-cyan"
-            >
-              <path
-                d="M5 12L10 17L19 7"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          <h2 className="font-serif font-light text-[42px] md:text-[5vw] leading-[1.1] tracking-[-0.03em] text-ink mb-4">
-            {t.success}
-          </h2>
-          <p className="text-ink-dim text-base">studio@krea.studio</p>
-        </div>
-      </section>
-    );
-  }
+  const reset = () => {
+    setStatus("idle");
+    setError(null);
+  };
 
   return (
     <section
       id="contact"
-      className="px-5 md:px-10 py-32 md:py-48 relative overflow-hidden"
+      className="px-5 md:px-10 py-28 md:py-48 relative overflow-hidden"
     >
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full pointer-events-none z-0 pulse-bg"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] md:w-[1200px] h-[900px] md:h-[1200px] rounded-full pointer-events-none z-0 pulse-bg"
         style={{
           background:
             "radial-gradient(circle, rgba(77,200,255,0.14), rgba(255,122,45,0.06) 40%, transparent 70%)",
         }}
       />
 
-      <div className="relative z-[1] max-w-6xl mx-auto">
-        <div className="text-center mb-16 reveal">
-          <div className="font-mono text-[11px] tracking-[0.16em] text-cyan uppercase mb-8">
-            ↳ {t.label}
-          </div>
-          <h2
-            className="font-serif font-light text-[48px] md:text-[10vw] leading-[0.9] tracking-[-0.04em]"
-            dangerouslySetInnerHTML={{ __html: t.title }}
-          />
-          <p className="mt-8 text-ink-dim max-w-md mx-auto">{t.lead}</p>
-        </div>
-
-        <form onSubmit={submit} className="reveal max-w-3xl mx-auto" noValidate>
-          <input
-            type="text"
-            name="website"
-            value={form.website}
-            onChange={onChange("website")}
-            tabIndex={-1}
-            autoComplete="off"
-            className="absolute opacity-0 pointer-events-none w-0 h-0"
-            aria-hidden="true"
-          />
-
-          <div
-            className="grid md:grid-cols-2 gap-px bg-line border border-line rounded-2xl overflow-hidden backdrop-blur-xl"
-            style={{ background: "rgba(10,18,32,0.4)" }}
-          >
-            <div className="bg-bg p-7 md:p-9 transition-colors hover:bg-bg-2">
-              <label className="block font-family-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
-                {t.name} <span className="text-acc">*</span>
-              </label>
-              <input
-                type="text"
-                value={form.name}
-                onChange={onChange("name")}
-                placeholder={t.namePh}
-                required
-                className="w-full bg-transparent border-0 outline-none font-serif font-light text-[26px] text-ink placeholder:text-ink-mute"
-              />
+      <div className="relative z-[1] max-w-3xl mx-auto">
+        {status === "success" ? (
+          <div className="text-center py-10 md:py-20 animate-[fadeUp_0.6s_ease]">
+            <div className="inline-flex w-16 h-16 mb-8 rounded-full border border-cyan/40 items-center justify-center bg-cyan/5 backdrop-blur">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" className="text-cyan">
+                <path d="M5 12L10 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
-            <div className="bg-bg p-7 md:p-9 transition-colors hover:bg-bg-2 border-l border-line">
-              <label className="block font-family-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
-                {t.company}
-              </label>
-              <input
-                type="text"
-                value={form.company}
-                onChange={onChange("company")}
-                placeholder={t.companyPh}
-                className="w-full bg-transparent border-0 outline-none font-serif font-light text-[26px] text-ink placeholder:text-ink-mute"
-              />
-            </div>
-            <div className="bg-bg p-7 md:p-9 transition-colors hover:bg-bg-2 border-t border-line">
-              <label className="block font-family-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
-                {t.contact} <span className="text-acc">*</span>
-              </label>
-              <input
-                type="text"
-                value={form.contact}
-                onChange={onChange("contact")}
-                placeholder={t.contactPh}
-                required
-                className="w-full bg-transparent border-0 outline-none font-serif font-light text-[26px] text-ink placeholder:text-ink-mute"
-              />
-            </div>
-            <div className="bg-bg p-7 md:p-9 transition-colors hover:bg-bg-2 border-t border-line border-l">
-              <label className="block font-family-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
-                {t.budget}
-              </label>
-              <select
-                value={form.budget}
-                onChange={onChange("budget")}
-                className="w-full bg-transparent border-0 outline-none font-serif font-light text-[20px] text-ink appearance-none cursor-pointer"
-                style={{
-                  backgroundImage:
-                    "url(\"data:image/svg+xml;utf8,<svg viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'><path d='M1 1L6 6L11 1' stroke='%234dc8ff' stroke-width='1.5' fill='none'/></svg>\")",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "right 0",
-                  backgroundSize: "12px",
-                  paddingRight: "20px",
-                }}
-              >
-                {t.budgetOptions.map((o: string) => (
-                  <option key={o} value={o} className="bg-bg-2 text-ink">
-                    {o}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="bg-bg p-7 md:p-9 transition-colors hover:bg-bg-2 border-t border-line md:col-span-2">
-              <label className="block font-family-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
-                {t.message} <span className="text-acc">*</span>
-              </label>
-              <textarea
-                value={form.message}
-                onChange={onChange("message")}
-                placeholder={t.messagePh}
-                required
-                rows={4}
-                className="w-full bg-transparent border-0 outline-none font-serif font-light text-[20px] text-ink placeholder:text-ink-mute resize-none leading-relaxed"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-4 text-sm text-acc font-mono">⚠ {error}</div>
-          )}
-
-          <div className="mt-10 flex justify-center">
+            <h2 className="font-serif font-light text-[34px] md:text-[5vw] leading-[1.05] tracking-[-0.03em] mb-5">
+              {t.successTitle}
+            </h2>
+            <p className="text-ink-dim max-w-md mx-auto leading-relaxed mb-10">
+              {t.successText}
+            </p>
             <button
-              type="submit"
-              disabled={status === "sending"}
-              className="group inline-flex items-center gap-4 pl-9 pr-3 py-5 border border-line-strong rounded-full text-ink text-sm tracking-wide transition-all relative overflow-hidden hover:border-cyan disabled:opacity-50 disabled:cursor-wait"
-              style={{
-                background: "rgba(10,18,32,0.5)",
-                backdropFilter: "blur(20px)",
-              }}
+              onClick={reset}
+              data-hover
+              className="font-mono text-[11px] tracking-[0.16em] text-cyan uppercase border-b border-cyan/40 pb-1 hover:border-cyan transition-colors"
             >
-              <span className="absolute inset-0 -z-10 bg-cyan translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              {status === "sending" ? t.sending : t.submit}
-              <span className="w-11 h-11 rounded-full bg-acc text-white flex items-center justify-center transition-transform group-hover:-rotate-45 relative z-1">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M3 13L13 3M13 3H6M13 3V10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
+              {t.successAgain}
             </button>
           </div>
-        </form>
+        ) : (
+          <>
+            <div className="text-center mb-12 md:mb-16">
+              <div className="font-mono text-[11px] tracking-[0.16em] text-cyan uppercase mb-6 md:mb-8">
+                ↳ {t.label}
+              </div>
+              <h2 className="font-serif font-light text-[40px] md:text-[7vw] leading-[0.95] tracking-[-0.03em] mb-6">
+                {t.title}
+              </h2>
+              <p className="text-ink-dim max-w-md mx-auto leading-relaxed">
+                {t.lead}
+              </p>
+            </div>
+
+            <form onSubmit={submit} noValidate>
+              <input
+                type="text"
+                name="website"
+                value={form.website}
+                onChange={onChange("website")}
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute opacity-0 pointer-events-none w-0 h-0"
+                aria-hidden
+              />
+
+              <div
+                className="grid md:grid-cols-2 gap-px bg-line border border-line-strong rounded-2xl overflow-hidden"
+                style={{ background: "rgba(10,18,32,0.4)", backdropFilter: "blur(20px)" }}
+              >
+                <Field label={t.name} req>
+                  <input type="text" value={form.name} onChange={onChange("name")} placeholder={t.namePh} className="field-input" />
+                </Field>
+                <Field label={t.company}>
+                  <input type="text" value={form.company} onChange={onChange("company")} placeholder={t.companyPh} className="field-input" />
+                </Field>
+                <Field label={t.contact} req>
+                  <input type="text" value={form.contact} onChange={onChange("contact")} placeholder={t.contactPh} className="field-input" />
+                </Field>
+
+                <div className="bg-bg p-6 md:p-8 relative" ref={budgetRef}>
+                  <label className="block font-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
+                    {t.budget}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setBudgetOpen((v) => !v)}
+                    className="w-full flex items-center justify-between bg-transparent font-serif font-light text-[20px] md:text-[22px] text-ink text-left"
+                  >
+                    <span>{form.budget}</span>
+                    <svg
+                      width="14" height="9" viewBox="0 0 14 9" fill="none"
+                      className={`text-cyan transition-transform duration-300 ${budgetOpen ? "rotate-180" : ""}`}
+                    >
+                      <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                  {budgetOpen && (
+                    <div
+                      className="absolute left-4 right-4 md:left-6 md:right-6 top-full mt-2 z-20 rounded-xl border border-line-strong overflow-hidden animate-[fadeIn_0.2s_ease]"
+                      style={{ background: "rgba(10,18,32,0.96)", backdropFilter: "blur(24px)", boxShadow: "0 20px 50px rgba(0,0,0,0.6)" }}
+                    >
+                      {t.budgetOptions.map((opt: string) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => {
+                            setForm({ ...form, budget: opt });
+                            setBudgetOpen(false);
+                          }}
+                          className={`block w-full text-left px-5 py-3 font-serif text-[18px] transition-colors ${
+                            form.budget === opt ? "bg-cyan/15 text-cyan" : "text-ink-dim hover:bg-white/5 hover:text-ink"
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="md:col-span-2 bg-bg p-6 md:p-8 transition-colors hover:bg-bg-2">
+                  <label className="block font-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
+                    {t.message} <span className="text-accent">*</span>
+                  </label>
+                  <textarea
+                    value={form.message}
+                    onChange={onChange("message")}
+                    placeholder={t.messagePh}
+                    rows={4}
+                    className="w-full bg-transparent border-0 outline-none font-serif font-light text-[18px] md:text-[20px] text-ink placeholder:text-ink-mute resize-none leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="mt-4 text-sm text-accent font-mono text-center">⚠ {error}</div>
+              )}
+
+              <div className="mt-8 md:mt-10 flex justify-center">
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  data-hover
+                  className="group inline-flex items-center gap-4 pl-9 pr-3 py-5 border border-line-strong rounded-full text-ink text-sm tracking-wide transition-all relative overflow-hidden hover:border-cyan disabled:opacity-50 disabled:cursor-wait"
+                  style={{ background: "rgba(10,18,32,0.5)", backdropFilter: "blur(20px)" }}
+                >
+                  <span className="absolute inset-0 -z-10 bg-cyan translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <span className="relative z-[1]">{status === "sending" ? t.sending : t.submit}</span>
+                  <span className="w-11 h-11 rounded-full bg-accent text-white flex items-center justify-center transition-transform group-hover:-rotate-45 relative z-[1]">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        :global(.field-input) {
+          width: 100%;
+          background: transparent;
+          border: 0;
+          outline: none;
+          font-family: "Fraunces", serif;
+          font-weight: 300;
+          font-size: 22px;
+          color: var(--ink);
+          line-height: 1.3;
+        }
+        :global(.field-input::placeholder) { color: var(--ink-mute); }
+      `}</style>
     </section>
+  );
+}
+
+function Field({
+  label,
+  req,
+  children,
+}: {
+  label: string;
+  req?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-bg p-6 md:p-8 transition-colors hover:bg-bg-2">
+      <label className="block font-mono text-[10px] tracking-[0.16em] text-cyan uppercase mb-3">
+        {label} {req && <span className="text-accent">*</span>}
+      </label>
+      {children}
+    </div>
   );
 }

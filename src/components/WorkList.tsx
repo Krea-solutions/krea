@@ -14,34 +14,6 @@ type Project = {
   colors: [string, string];
 };
 
-function drawThumb(
-  ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  colors: [string, string],
-  time: number,
-) {
-  const g = ctx.createLinearGradient(0, 0, w, h);
-  g.addColorStop(0, colors[1]);
-  g.addColorStop(1, colors[0] + "40");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = colors[0];
-  ctx.lineWidth = 1;
-  for (let j = 0; j < 5; j++) {
-    ctx.globalAlpha = 0.3 + j * 0.1;
-    ctx.beginPath();
-    for (let x = 0; x < w; x += 2) {
-      const y =
-        h / 2 + Math.sin(x * 0.02 + time + j * 0.5) * h * 0.2 * (1 + j * 0.1);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-}
-
 export default function WorkList({
   t,
   locale,
@@ -51,161 +23,162 @@ export default function WorkList({
   locale: string;
   projects: Project[];
 }) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const [activeProj, setActiveProj] = useState<Project | null>(null);
-  const [selectedProj, setSelectedProj] = useState<Project | null>(null);
+  const [selected, setSelected] = useState<Project | null>(null);
+  const isRu = locale === "ru";
 
-  const thumbCanvases = useRef<
-    Array<{ cvs: HTMLCanvasElement; proj: Project }>
-  >([]);
-
+  // lock scroll when modal open
   useEffect(() => {
-    const thumbCanvases_local: Array<{
-      cvs: HTMLCanvasElement;
-      proj: Project;
-    }> = [];
-    const containers = document.querySelectorAll("[data-thumb]");
-    containers.forEach((container, idx) => {
-      if (idx < projects.length) {
-        const cvs = container as HTMLCanvasElement;
-        cvs.width = 64 * dpr;
-        cvs.height = 40 * dpr;
-        thumbCanvases_local.push({ cvs, proj: projects[idx] });
-      }
-    });
-    thumbCanvases.current = thumbCanvases_local;
-  }, [projects, dpr]);
-
-  useEffect(() => {
-    const prevCvs = document.getElementById("prev-cvs") as HTMLCanvasElement;
-    if (!prevCvs) return;
-    prevCvs.width = 380 * dpr;
-    prevCvs.height = 240 * dpr;
-
-    let raf = 0;
-    const animLoop = () => {
-      const t = performance.now() * 0.001;
-      thumbCanvases.current.forEach(({ cvs, proj }) => {
-        const c = cvs.getContext("2d");
-        if (c) drawThumb(c, cvs.width, cvs.height, proj.colors, t);
-      });
-      if (activeProj && prevCvs) {
-        const c = prevCvs.getContext("2d");
-        if (c)
-          drawThumb(c, prevCvs.width, prevCvs.height, activeProj.colors, t);
-      }
-      raf = requestAnimationFrame(animLoop);
+    document.body.style.overflow = selected ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
     };
-    raf = requestAnimationFrame(animLoop);
-    return () => cancelAnimationFrame(raf);
-  }, [activeProj, dpr]);
+  }, [selected]);
+
+  if (!projects || projects.length === 0) return null;
 
   return (
-    <section className="px-5 md:px-10 py-32 md:py-40 relative" id="work">
-      <div className="grid md:grid-cols-3 gap-10 mb-16 md:mb-24 reveal">
+    <section
+      id="work"
+      className="px-5 md:px-10 py-24 md:py-40 border-b border-line"
+    >
+      <div className="grid md:grid-cols-3 gap-6 md:gap-10 mb-12 md:mb-20 reveal">
         <div className="font-mono text-[11px] tracking-[0.16em] text-cyan uppercase flex items-start gap-2.5">
           <span className="w-1.5 h-1.5 mt-1 bg-cyan rounded-full shadow-[0_0_12px_var(--cyan)]" />
           {t.label}
         </div>
-        <h2
-          className="md:col-span-2 font-serif font-light text-[40px] md:text-[6vw] leading-[0.95] tracking-[-0.03em]"
-          dangerouslySetInnerHTML={{ __html: t.title }}
-        />
+        <h2 className="md:col-span-2 font-serif font-light text-[32px] md:text-[6vw] leading-[1.0] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.03em]">
+          {t.title}
+        </h2>
       </div>
 
       <div className="flex flex-col reveal">
         {projects.map((proj, i) => (
-          <div
+          <button
             key={proj.id}
-            onClick={() => setSelectedProj(proj)}
-            onMouseEnter={() => setActiveProj(proj)}
-            onMouseLeave={() => setActiveProj(null)}
-            onMouseMove={(e) => {
-              const pv = document.getElementById("preview");
-              if (pv) {
-                pv.style.left = e.clientX + "px";
-                pv.style.top = e.clientY + "px";
-              }
-            }}
-            className="group work-item grid grid-cols-[1fr_auto] md:grid-cols-[48px_1fr_160px_80px] gap-6 md:gap-8 items-center border-t border-line py-8 md:py-12 cursor-pointer relative transition-all hover:py-10 md:hover:py-14"
+            onClick={() => setSelected(proj)}
+            data-hover
+            className="group text-left grid grid-cols-[auto_1fr_auto] md:grid-cols-[56px_1fr_auto_auto] gap-4 md:gap-8 items-center border-t border-line last:border-b py-6 md:py-10 transition-all hover:px-2 md:hover:px-4"
           >
-            <span className="hidden md:block font-mono text-[11px] text-ink-mute">
+            <span className="font-mono text-[11px] text-ink-mute">
               {String(i + 1).padStart(2, "0")}
             </span>
-
-            <h3 className="font-serif font-light text-[24px] md:text-[3.5vw] leading-tight tracking-[-0.02em] flex items-center gap-3 md:gap-5 transition-transform group-hover:translate-x-5">
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: locale === "ru" ? proj.nameRu : proj.name,
-                }}
-              />
-              <span className="text-cyan opacity-0 transform -translate-x-3 transition-all group-hover:opacity-100 group-hover:translate-x-0">
+            <span className="font-serif font-light text-[22px] md:text-[3.4vw] leading-[1.05] tracking-[-0.02em] flex items-center gap-3 md:gap-5 transition-transform duration-500 group-hover:translate-x-2 md:group-hover:translate-x-5">
+              <span>{isRu ? proj.nameRu : proj.name}</span>
+              <span className="text-cyan opacity-0 -translate-x-3 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0">
                 ↗
               </span>
-            </h3>
-
-            <span className="hidden md:block font-mono text-[11px] text-ink-dim uppercase">
-              {locale === "ru" ? proj.tagRu : proj.tag}
             </span>
-            <span className="hidden md:block font-mono text-[11px] text-ink-dim">
+            <span className="hidden md:block font-mono text-[11px] text-ink-dim uppercase tracking-wide text-right w-[180px]">
+              {isRu ? proj.tagRu : proj.tag}
+            </span>
+            <span className="font-mono text-[11px] text-ink-dim text-right w-[48px]">
               {proj.year}
             </span>
-
-            <canvas
-              data-thumb
-              className="w-16 h-10 md:w-[80px] md:h-12 rounded"
-            />
-          </div>
+          </button>
         ))}
-        {projects.length === 0 && (
-          <div className="border-t border-line py-8 text-center text-ink-dim">
-            Проекты ещё не добавлены
-          </div>
-        )}
       </div>
 
-      <div
-        id="preview"
-        className="fixed w-[380px] h-[240px] rounded-xl overflow-hidden pointer-events-none z-99 opacity-0 transform -translate-x-1/2 -translate-y-1/2 scale-85 transition-all duration-300"
-        style={{ boxShadow: "0 30px 80px rgba(0,0,0,0.7)" }}
-      >
-        <canvas id="prev-cvs" className="w-full h-full" />
-      </div>
-
-      {selectedProj && (
+      {selected && (
         <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
-          onClick={() => setSelectedProj(null)}
+          className="fixed inset-0 z-[200] flex items-end md:items-center justify-center p-0 md:p-6"
+          onClick={() => setSelected(null)}
         >
           <div
-            className="bg-bg border border-line rounded-lg max-w-2xl w-full"
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-[fadeIn_0.3s_ease]"
+            aria-hidden
+          />
+          <div
+            className="relative w-full md:max-w-3xl bg-bg-2 border border-line-strong md:rounded-2xl rounded-t-2xl overflow-hidden max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
+            style={{ boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}
           >
-            <div className="px-6 md:px-10 py-8 border-b border-line flex justify-between items-start">
-              <div>
-                <h3 className="font-serif font-light text-[32px] md:text-[4vw] leading-tight tracking-[-0.02em] mb-2">
-                  {locale === "ru" ? selectedProj.nameRu : selectedProj.name}
-                </h3>
-                <p className="font-mono text-[11px] text-cyan uppercase">
-                  {locale === "ru" ? selectedProj.tagRu : selectedProj.tag} ·{" "}
-                  {selectedProj.year}
-                </p>
-              </div>
+            <div
+              className="relative h-40 md:h-56 shrink-0 overflow-hidden"
+              style={{
+                background: `linear-gradient(135deg, ${selected.colors[1]}, ${selected.colors[0]})`,
+              }}
+            >
+              <ModalCanvas colors={selected.colors} />
               <button
-                onClick={() => setSelectedProj(null)}
-                className="text-ink-mute hover:text-ink"
+                onClick={() => setSelected(null)}
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/30 backdrop-blur text-white flex items-center justify-center hover:bg-black/50 transition-colors"
+                aria-label="Закрыть"
               >
                 ✕
               </button>
             </div>
-            <div className="px-6 md:px-10 py-8">
-              <p className="text-base leading-relaxed text-ink-dim">
-                {locale === "ru" ? selectedProj.descRu : selectedProj.desc}
+
+            <div className="p-6 md:p-10 overflow-y-auto">
+              <div className="font-mono text-[11px] text-cyan uppercase tracking-[0.12em] mb-3">
+                {isRu ? selected.tagRu : selected.tag} · {selected.year}
+              </div>
+              <h3 className="font-serif font-light text-[30px] md:text-[44px] leading-[1.05] tracking-[-0.02em] mb-5">
+                {isRu ? selected.nameRu : selected.name}
+              </h3>
+              <p className="text-[15px] md:text-base leading-relaxed text-ink-dim max-w-xl">
+                {isRu ? selected.descRu : selected.desc}
               </p>
             </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </section>
   );
+}
+
+function ModalCanvas({ colors }: { colors: [string, string] }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cvs = ref.current;
+    if (!cvs) return;
+    const ctx = cvs.getContext("2d")!;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let raf = 0;
+    const resize = () => {
+      const r = cvs.getBoundingClientRect();
+      cvs.width = r.width * dpr;
+      cvs.height = r.height * dpr;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(cvs);
+    let t = 0;
+    const draw = () => {
+      t += 0.01;
+      const w = cvs.width,
+        h = cvs.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = colors[0];
+      ctx.lineWidth = 1.5 * dpr;
+      for (let j = 0; j < 6; j++) {
+        ctx.globalAlpha = 0.15 + j * 0.08;
+        ctx.beginPath();
+        for (let x = 0; x < w; x += 3) {
+          const y =
+            h / 2 + Math.sin(x * 0.012 + t + j * 0.6) * h * 0.22 * (1 + j * 0.1);
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [colors]);
+  return <canvas ref={ref} className="absolute inset-0 w-full h-full" />;
 }

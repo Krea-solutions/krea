@@ -11,13 +11,6 @@ export type Lead = {
   status: "new" | "read" | "archived";
 };
 
-export type Settings = {
-  notifyTelegram: boolean;
-  autoReplyEnabled: boolean;
-  emailFooter: string;
-  updatedAt: string;
-};
-
 export type Project = {
   id: string;
   name: string;
@@ -38,6 +31,32 @@ export type Testimonial = {
   role: string;
 };
 
+export type Metric = {
+  id: string;
+  value: string;
+  label: string;
+  labelRu: string;
+};
+
+export type SectionVisibility = {
+  work: boolean;
+  services: boolean;
+  philosophy: boolean;
+  process: boolean;
+  metrics: boolean;
+  testimonials: boolean;
+};
+
+export type Settings = {
+  notifyTelegram: boolean;
+  autoReplyEnabled: boolean;
+  emailFooter: string;
+  visibility: SectionVisibility;
+  yandexMetrikaId: string;
+  yandexMetrikaToken: string;
+  updatedAt: string;
+};
+
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
@@ -51,24 +70,28 @@ async function redis(command: string[]) {
     headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
     body: JSON.stringify(command),
   });
-
-  if (!res.ok) {
-    throw new Error(`Redis error: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`Redis error: ${res.status}`);
   const data = await res.json();
-
-  if ("error" in data) {
-    throw new Error(data.error);
-  }
-
+  if ("error" in data) throw new Error(data.error);
   return data.result;
 }
+
+const DEFAULT_VISIBILITY: SectionVisibility = {
+  work: true,
+  services: true,
+  philosophy: true,
+  process: true,
+  metrics: true,
+  testimonials: true,
+};
 
 const DEFAULT_SETTINGS: Settings = {
   notifyTelegram: true,
   autoReplyEnabled: false,
   emailFooter: "KREA · studio@krea.studio",
+  visibility: DEFAULT_VISIBILITY,
+  yandexMetrikaId: "",
+  yandexMetrikaToken: "",
   updatedAt: new Date().toISOString(),
 };
 
@@ -118,7 +141,13 @@ export async function deleteLead(id: string): Promise<boolean> {
 // SETTINGS
 export async function getSettings(): Promise<Settings> {
   const json = await redis(["GET", "settings"]);
-  return json ? JSON.parse(json) : DEFAULT_SETTINGS;
+  if (!json) return DEFAULT_SETTINGS;
+  const parsed = JSON.parse(json);
+  return {
+    ...DEFAULT_SETTINGS,
+    ...parsed,
+    visibility: { ...DEFAULT_VISIBILITY, ...(parsed.visibility || {}) },
+  };
 }
 
 export async function updateSettings(
@@ -128,6 +157,7 @@ export async function updateSettings(
   const next: Settings = {
     ...current,
     ...patch,
+    visibility: { ...current.visibility, ...(patch.visibility || {}) },
     updatedAt: new Date().toISOString(),
   };
   await redis(["SET", "settings", JSON.stringify(next)]);
@@ -156,4 +186,15 @@ export async function updateTestimonials(
   testimonials: Testimonial[],
 ): Promise<void> {
   await redis(["SET", "testimonials", JSON.stringify(testimonials)]);
+}
+
+// METRICS
+export async function getMetrics(): Promise<Metric[]> {
+  const json = await redis(["GET", "metrics"]);
+  if (!json) return [];
+  return JSON.parse(json);
+}
+
+export async function updateMetrics(metrics: Metric[]): Promise<void> {
+  await redis(["SET", "metrics", JSON.stringify(metrics)]);
 }

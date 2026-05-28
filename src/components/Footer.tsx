@@ -1,14 +1,14 @@
 export default function Footer({ t }: { t: any }) {
   return (
     <>
-      <div className="font-serif font-light italic text-[120px] md:text-[25vw] leading-[0.85] tracking-[-0.06em] text-center py-12 border-t border-line text-ink overflow-hidden whitespace-nowrap">
+      <div className="font-serif font-light italic text-[90px] md:text-[25vw] leading-[0.85] tracking-[-0.06em] text-center py-10 md:py-12 border-t border-line text-ink overflow-hidden whitespace-nowrap">
         KREA<span className="text-cyan">.</span>
       </div>
 
-      <footer className="border-t border-line px-5 md:px-10 pt-16 pb-8">
-        <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-10 md:gap-16 pb-16 max-w-7xl mx-auto">
+      <footer className="border-t border-line px-5 md:px-10 pt-12 md:pt-16 pb-8">
+        <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-10 md:gap-16 pb-12 md:pb-16 max-w-7xl mx-auto">
           <div
-            className="font-serif font-light text-[40px] md:text-[6vw] leading-[0.9] tracking-[-0.04em]"
+            className="font-serif font-light text-[32px] md:text-[5vw] leading-[0.95] tracking-[-0.04em]"
             dangerouslySetInnerHTML={{ __html: t.brand }}
           />
           <FooterCol title={t.studio}>
@@ -28,17 +28,13 @@ export default function Footer({ t }: { t: any }) {
         <div className="border-t border-line pt-6 flex flex-col md:flex-row md:justify-between md:items-center gap-3 font-mono text-[11px] text-ink-mute tracking-wide max-w-7xl mx-auto">
           <div>© 2026 KREA STUDIO · {t.rights}</div>
           <div className="flex gap-6">
-            <span>v5.0.1</span>
+            <span>v5.0</span>
             <span>{t.built}</span>
           </div>
         </div>
       </footer>
 
       <style jsx>{`
-        :global(.footer-brand em) {
-          font-style: italic;
-          color: var(--ink-dim);
-        }
         :global(footer em) {
           font-style: italic;
           color: var(--ink-dim);
@@ -48,13 +44,7 @@ export default function Footer({ t }: { t: any }) {
   );
 }
 
-function FooterCol({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h4 className="font-mono text-[11px] tracking-[0.16em] text-ink-mute uppercase mb-5 font-normal">

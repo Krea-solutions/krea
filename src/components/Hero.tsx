@@ -163,12 +163,12 @@ export default function Hero({ t }: { t: any }) {
       />
 
       <div className="relative z-[2]">
-        <div className="flex justify-between items-end mb-10 md:mb-16 font-mono text-[11px] letter-spacing-[0.1em] text-ink-dim uppercase">
+        <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-end mb-10 md:mb-16 font-mono text-[10px] md:text-[11px] tracking-[0.08em] text-ink-dim uppercase">
           <div className="flex flex-col">
             <small className="text-ink-mute mb-1">{t.metaLeft}</small>
             {t.metaLeftSub}
           </div>
-          <div className="text-right flex flex-col">
+          <div className="md:text-right flex flex-col">
             <small className="text-ink-mute mb-1">{t.metaRight}</small>
             <div
               className="transition-opacity duration-500"
@@ -179,27 +179,24 @@ export default function Hero({ t }: { t: any }) {
           </div>
         </div>
 
-        <h1 className="font-serif font-light text-[52px] md:text-[13vw] leading-[0.88] tracking-[-0.04em] mb-16 overflow-hidden">
+        <h1 className="font-serif font-light text-[clamp(44px,15vw,200px)] md:text-[13vw] leading-[0.9] md:leading-[0.88] tracking-[-0.02em] md:tracking-[-0.04em] mb-12 md:mb-16">
           {[t.title1, t.title2, t.title3, t.title4].map((word, i) => {
             const isCyan = i === 1;
             const isOrange = i === 3;
             return (
-              <div
-                key={i}
-                className={`overflow-hidden ${isCyan || isOrange ? "inline-block mr-[0.08em]" : ""}`}
-              >
+              <span key={i} className="word-mask mr-[0.18em]">
                 <span
-                  className={`inline-block transform transition-all duration-1000 ${isCyan ? "text-cyan italic" : isOrange ? "text-acc italic" : ""}`}
-                  style={{ transform: "translateY(0)" }}
+                  className={`${isCyan ? "text-cyan italic" : isOrange ? "text-accent italic" : ""}`}
+                  style={{ animationDelay: `${0.2 + i * 0.12}s` }}
                 >
                   {word}
                 </span>
-              </div>
+              </span>
             );
           })}
         </h1>
 
-        <div className="grid md:grid-cols-3 gap-10 md:gap-16">
+        <div className="grid md:grid-cols-3 gap-8 md:gap-16">
           <p className="font-light text-sm leading-relaxed text-ink-dim max-w-xs">
             {t.lead}
           </p>
@@ -207,7 +204,7 @@ export default function Hero({ t }: { t: any }) {
           <a
             href="#work"
             ref={ctaRef}
-            className="justify-self-end self-end inline-flex items-center gap-3.5 pl-7 pr-2.5 py-4 border border-line-strong rounded-full text-ink text-sm transition-all relative overflow-hidden hover:border-cyan group"
+            className="justify-self-start md:justify-self-end self-start md:self-end inline-flex items-center gap-3.5 pl-7 pr-2.5 py-4 border border-line-strong rounded-full text-ink text-sm transition-all relative overflow-hidden hover:border-cyan group"
             style={{
               background: "rgba(10,18,32,0.4)",
               backdropFilter: "blur(20px)",
