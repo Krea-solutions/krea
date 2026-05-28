@@ -27,8 +27,12 @@ body {
   font-weight: 400;
   line-height: 1.5;
   overflow-x: hidden;
+  cursor: default;
 }
-@media (min-width: 901px) { body { cursor: none; } }
+body.cursor-ready {
+  cursor: none;
+}
+@media (max-width: 900px) { .cursor, .cursor-ring { display: none; } }
 
 /* Grain */
 body::before {

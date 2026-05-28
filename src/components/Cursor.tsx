@@ -14,6 +14,9 @@ export default function Cursor() {
       return;
     }
 
+    // Enable custom cursor
+    document.body.classList.add('cursor-ready');
+
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let rx = mx, ry = my;
     let raf = 0;
@@ -56,6 +59,7 @@ export default function Cursor() {
         el.removeEventListener('mouseenter', enter);
         el.removeEventListener('mouseleave', leave);
       });
+      document.body.classList.remove('cursor-ready');
     };
   }, []);
 
