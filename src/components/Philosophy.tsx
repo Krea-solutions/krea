@@ -1,10 +1,7 @@
 "use client";
-
 import { useEffect, useRef } from "react";
-
 export default function Philosophy({ t }: { t: any }) {
   const cvsRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const cvs = cvsRef.current;
     if (!cvs) return;
@@ -14,30 +11,25 @@ export default function Philosophy({ t }: { t: any }) {
       h = 0;
     let animationFrameId = 0;
     let isVisible = true;
-
     const resize = () => {
       const r = cvs.getBoundingClientRect();
       w = cvs.width = r.width * dpr;
       h = cvs.height = r.height * dpr;
     };
     resize();
-
     const observer = new IntersectionObserver((entries) => {
       isVisible = entries[0].isIntersecting;
       if (isVisible && animationFrameId === 0) animate();
     });
     observer.observe(cvs);
-
     const ro = new ResizeObserver(resize);
     ro.observe(cvs);
-
     let t0 = 0;
     const colors = [
-      "rgba(77, 200, 255, 0.18)",
-      "rgba(37, 150, 255, 0.12)",
-      "rgba(255, 122, 45, 0.08)",
+      "rgba(77,200,255,0.18)",
+      "rgba(37,150,255,0.12)",
+      "rgba(255,122,45,0.08)",
     ];
-
     const animate = () => {
       if (!isVisible) {
         animationFrameId = 0;
@@ -59,14 +51,12 @@ export default function Philosophy({ t }: { t: any }) {
       animationFrameId = requestAnimationFrame(animate);
     };
     animate();
-
     return () => {
       cancelAnimationFrame(animationFrameId);
       ro.disconnect();
       observer.disconnect();
     };
   }, []);
-
   return (
     <section
       className="px-5 md:px-10 py-28 md:py-48 text-center border-y border-line relative overflow-hidden"
@@ -76,9 +66,13 @@ export default function Philosophy({ t }: { t: any }) {
         ref={cvsRef}
         className="absolute inset-0 w-full h-full z-0 opacity-50 pointer-events-none"
       />
-      <div className="relative z-[1] max-w-[680px] md:max-w-[900px] mx-auto reveal">
+      <div
+        className="relative z-[1] mx-auto reveal"
+        style={{ width: "90%", maxWidth: "1100px" }}
+      >
         <p
-          className="font-serif font-light text-[26px] md:text-[44px] leading-[1.3] tracking-[-0.01em] text-balance px-2"
+          className="font-serif font-light leading-[1.3] tracking-[-0.01em]"
+          style={{ fontSize: "clamp(22px, 3vw, 46px)" }}
           dangerouslySetInnerHTML={{ __html: t.quote }}
         />
         <div className="mt-8 md:mt-12 font-mono text-[10px] md:text-[11px] tracking-[0.16em] text-ink-dim uppercase">
