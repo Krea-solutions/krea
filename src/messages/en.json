@@ -9,14 +9,14 @@
   },
   "hero": {
     "metaLeft": "(Creative Technology Studio)",
-    "metaLeftSub": "EST. 2019 ",
+    "metaLeftSub": "EST. 2019 ·",
     "metaRight": "(Currently shaping)",
     "ticker": "BRANDS · INTERFACES · WORLDS",
     "title1": "We",
     "title2": "build",
-    "title3": "the",
-    "title4": "unbuilt.",
-    "lead": "KREA is a creative technology studio designing brands, products and digital worlds at the intersection of art, code and intelligence.",
+    "title3": "what",
+    "title4": "isn't built.",
+    "lead": "KREA is a creative technology studio. We design brands, products and digital worlds at the intersection of art, code and intelligence.",
     "stats": {
       "projects": "Projects",
       "awards": "Awards",
@@ -26,90 +26,90 @@
   },
   "work": {
     "label": "Selected Work / 001",
-    "title": "Cases that <em>define</em><br/>the work we make."
+    "title": "Cases that <em>define</em> our path."
   },
   "services": {
     "label": "Capabilities / 002",
-    "title": "A studio built for<br/><em>end-to-end</em> craft.",
+    "title": "End-to-end from concept to launch.",
     "items": {
       "brand": {
-        "title": "Brand <em>Identity</em>",
-        "desc": "Strategy, naming, visual systems and verbal identity that hold under any pressure — from a billboard to a single pixel."
+        "title": "Brand <em>System</em>",
+        "desc": "Strategy, naming, visual and verbal identity. From concept through full implementation."
       },
       "product": {
         "title": "Product <em>Design</em>",
-        "desc": "Interfaces with their own architecture and rhythm. From the first sketch to the last component in production."
+        "desc": "Interfaces with their own architecture and rhythm. From first sketch to production launch."
       },
       "motion": {
         "title": "Motion <em>Design</em>",
-        "desc": "Cinematic, physics-driven motion that turns interfaces into instruments and brands into living things."
+        "desc": "Cinematic movement that brings interfaces to life and makes brands breathe."
       },
       "ai": {
-        "title": "AI <em>Experiences</em>",
-        "desc": "Generative tools, agentic flows, intelligent surfaces. We design systems that think — and stay beautiful while doing it."
+        "title": "AI <em>Systems</em>",
+        "desc": "Generative tools, agentic interfaces, intelligent surfaces. Technology that stays beautiful."
       },
       "web": {
         "title": "Web <em>Engineering</em>",
-        "desc": "Next.js, edge runtimes, headless CMS, WebGL. Sites engineered for performance, animation and longevity."
+        "desc": "Next.js, edge infrastructure, CMS, WebGL. Sites built for speed and longevity."
       },
       "three": {
         "title": "3D & <em>Interactive</em>",
-        "desc": "Three.js, R3F, shaders, real-time rendering. Worlds you can walk into — engineered for the browser."
+        "desc": "Three.js, R3F, shaders, real-time rendering. Worlds you can walk into in a browser."
       }
     }
   },
   "philosophy": {
-    "quote": "Design is the <em>last interface</em> between intent<br/>and outcome. We engineer it like infrastructure,<br/>treat it like cinema.",
-    "attr": "— Krea Manifesto, Vol. III"
+    "quote": "Design is the <em>last interface</em> between intent and outcome. We build it like infrastructure, approach it like cinema.",
+    "attr": "— KREA Manifesto, Vol. III"
   },
   "process": {
     "label": "Process / 003",
-    "title": "From <em>first signal</em><br/>to shipped artefact.",
+    "title": "From impulse to artifact.",
     "steps": [
       {
-        "name": "Listen, <em>decode</em>",
-        "desc": "Conversation, audit, sharp diagnostic. Before a single pixel moves, we know exactly what truth needs to be expressed."
+        "name": "Listen, <em>understand</em>",
+        "desc": "Conversation, audit, diagnosis. Before moving a single pixel, every intention is clear."
       },
       {
-        "name": "Direction & <em>strategy</em>",
-        "desc": "Positioning, narrative, principles and creative direction. The studio aligns on a single horizon before sprinting toward it."
+        "name": "Course & <em>strategy</em>",
+        "desc": "Positioning, narrative, principles. The studio aligns on one horizon and moves toward it."
       },
       {
         "name": "Design <em>in motion</em>",
-        "desc": "Identity systems, product surfaces and motion language built in parallel. Static frames die fast — we design with motion from iteration one."
+        "desc": "Identity system, product surfaces and motion language develop in parallel. Static is dead."
       },
       {
         "name": "Engineer, <em>ship</em>",
-        "desc": "In-house engineering on Next.js, R3F and edge infrastructure. Designers and engineers side-by-side until build matches comp pixel-for-pixel."
+        "desc": "Next.js, R3F, edge architecture — all engineering is ours. Designers and developers together until comp matches reality."
       },
       {
-        "name": "Operate, <em>evolve</em>",
-        "desc": "We stay in orbit. Quarterly design reviews, ongoing systems work and long-term partnership designed around compounding craft."
+        "name": "On orbit, <em>evolve</em>",
+        "desc": "We don't disappear after launch. Quarterly reviews, system development, partnership built on accumulated quality."
       }
     ]
   },
   "metrics": {
-    "projects": { "label": "Projects shipped across<br/>multiple industries" },
-    "awards": { "label": "International awards<br/>since 2019" },
-    "retention": { "label": "Client retention<br/>after first engagement" },
-    "reach": { "label": "Monthly users touching<br/>work we have shipped" }
+    "projects": { "label": "Projects across multiple industries" },
+    "awards": { "label": "International awards since 2019" },
+    "retention": { "label": "Client retention after first project" },
+    "reach": { "label": "Monthly users of our work" }
   },
   "testi": {
     "label": "Words / 004",
-    "title": "What partners say<br/>after <em>launch</em>.",
+    "title": "Partners speak after <em>launch</em>.",
     "items": [
       {
-        "q": "KREA didn't just redesign our product — they rewrote the relationship our users have with money. Every screen feels like a deliberate sentence.",
+        "q": "KREA didn't redesign our product—they rewrote how users relate to money. Every screen is a deliberate sentence.",
         "n": "M. Krasnov",
         "r": "Halcyon · CPO"
       },
       {
-        "q": "The level of craft is honestly unusual. They engineer their motion the way Pixar engineers a frame — with intent visible in every detail.",
+        "q": "The craft is unusual. They engineer motion the way Pixar builds a frame. Calculation in every move.",
         "n": "A. Volkov",
         "r": "Aurora · Founder"
       },
       {
-        "q": "We've worked with the best studios in London and New York. KREA is in a quieter, sharper league of its own — closer to an atelier than an agency.",
+        "q": "We've worked with the best in London and New York. KREA is another league. Quieter. Sharper. Like an atelier.",
         "n": "E. Saito",
         "r": "Nokto · Creative Director"
       }
@@ -117,11 +117,11 @@
   },
   "form": {
     "label": "Start a project / 005",
-    "title": "Let's build something<br/><em>unrepeatable</em>.",
-    "lead": "Tell us about your project. We respond within one business day.",
+    "title": "Let's build something unrepeatable.",
+    "lead": "Tell us about your project. We'll respond within one business day.",
     "name": "Name",
     "namePh": "Your name",
-    "company": "Company",
+    "company": "Organization",
     "companyPh": "Studio / brand",
     "contact": "Telegram / Email",
     "contactPh": "@username or you@mail.com",
@@ -134,27 +134,23 @@
       "Not sure yet"
     ],
     "message": "Brief",
-    "messagePh": "Goals, deadlines, references…",
-    "submit": "Send brief",
+    "messagePh": "Goals, timeline, references…",
+    "submit": "Send",
     "sending": "Sending…",
-    "success": "Brief received. We'll be in touch within one business day.",
-    "error": "Something went wrong. Please try again or write to studio@krea.studio.",
+    "success": "Thank you. We'll be in touch soon.",
+    "error": "Error sending. Please try again or contact us directly.",
     "required": "This field is required",
-    "invalidContact": "Add a valid email or @telegram"
+    "invalidContact": "Email or @telegram"
   },
   "footer": {
-    "brand": "Creative <em>technology</em><br/>studio.",
+    "brand": "Studio of <em>creative</em> technologies.",
     "studio": "Studio",
     "about": "About",
     "careers": "Careers",
     "journal": "Journal",
     "press": "Press kit",
-    "connect": "Connect",
-    "locations": "Locations",
-    "loc1": "Berlin · Kreuzberg",
-    "loc2": "Tbilisi · Vera",
-    "loc3": "Remote · Global",
+    "connect": "Contact",
     "rights": "All rights reserved",
-    "built": "Built with intention"
+    "built": "Made with intention"
   }
 }
