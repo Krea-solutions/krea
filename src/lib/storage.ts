@@ -1,98 +1,92 @@
-import fs from 'fs/promises';
-import path from 'path';
+import type { Lead, Settings } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const LEADS_FILE = path.join(DATA_DIR, 'leads.json');
-const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+export { type Lead, type Settings };
 
-export type Lead = {
-  id: string;
-  createdAt: string;
-  name: string;
-  company: string;
-  contact: string;
-  budget: string;
-  message: string;
-  locale: string;
-  ip?: string;
-  status: 'new' | 'read' | 'archived';
-};
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-export type Settings = {
-  notifyTelegram: boolean;
-  autoReplyEnabled: boolean;
-  emailFooter: string;
-  updatedAt: string;
-};
+if (!REDIS_URL || !REDIS_TOKEN) {
+  throw new Error("Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN");
+}
+
+async function redis<T = unknown>([command, args]: [string, unknown[]]): Promise<T> {
+  const body = JSON.stringify({ command, args });
+  const res = await fetch(REDIS_URL!, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${REDIS_TOKEN!}`,
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.result;
+}
 
 const DEFAULT_SETTINGS: Settings = {
   notifyTelegram: true,
   autoReplyEnabled: false,
-  emailFooter: 'KREA · studio@krea.studio',
-  updatedAt: new Date().toISOString()
+  emailFooter: "KREA · studio@krea.studio",
+  updatedAt: new Date().toISOString(),
 };
 
-async function ensureDir() {
-  try { await fs.mkdir(DATA_DIR, { recursive: true }); } catch {}
-}
-
-async function readJson<T>(file: string, fallback: T): Promise<T> {
-  try {
-    await ensureDir();
-    const buf = await fs.readFile(file, 'utf-8');
-    return JSON.parse(buf) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-async function writeJson(file: string, data: unknown) {
-  await ensureDir();
-  await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf-8');
-}
-
 export async function getLeads(): Promise<Lead[]> {
-  const leads = await readJson<Lead[]>(LEADS_FILE, []);
-  return leads.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const keys = await redis<string[]>(["KEYS", ["leads:*"]]);
+  if (!keys || keys.length === 0) return [];
+  const leads = await Promise.all(
+    (keys as string[]).map(async (key) => {
+      const json = await redis<string>(["GET", [key]]);
+      return JSON.parse(json) as Lead;
+    }),
+  );
+  return leads.sort((a: Lead, b: Lead) => b.createdAt.localeCompare(a.createdAt));
 }
 
-export async function addLead(lead: Omit<Lead, 'id' | 'createdAt' | 'status'>): Promise<Lead> {
-  const leads = await getLeads();
+export async function addLead(
+  lead: Omit<Lead, "id" | "createdAt" | "status">,
+): Promise<Lead> {
   const newLead: Lead = {
     ...lead,
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
-    status: 'new'
+    status: "new",
   };
-  leads.unshift(newLead);
-  await writeJson(LEADS_FILE, leads);
+  await redis<void>(["SET", [`leads:${newLead.id}`, JSON.stringify(newLead)]]);
   return newLead;
 }
 
-export async function updateLeadStatus(id: string, status: Lead['status']): Promise<Lead | null> {
-  const leads = await getLeads();
-  const i = leads.findIndex(l => l.id === id);
-  if (i === -1) return null;
-  leads[i].status = status;
-  await writeJson(LEADS_FILE, leads);
-  return leads[i];
+export async function updateLeadStatus(
+  id: string,
+  status: Lead["status"],
+): Promise<Lead | null> {
+  const json = await redis<string | null>(["GET", [`leads:${id}`]]);
+  if (!json) return null;
+  const lead: Lead = JSON.parse(json);
+  lead.status = status;
+  await redis<void>(["SET", [`leads:${id}`, JSON.stringify(lead)]]);
+  return lead;
 }
 
 export async function deleteLead(id: string): Promise<boolean> {
-  const leads = await getLeads();
-  const next = leads.filter(l => l.id !== id);
-  if (next.length === leads.length) return false;
-  await writeJson(LEADS_FILE, next);
-  return true;
+  const deleted = await redis<number>(["DEL", [`leads:${id}`]]);
+  return deleted > 0;
 }
 
 export async function getSettings(): Promise<Settings> {
-  return readJson<Settings>(SETTINGS_FILE, DEFAULT_SETTINGS);
+  const json = await redis<string | null>(["GET", ["settings"]]);
+  return json ? JSON.parse(json) : DEFAULT_SETTINGS;
 }
 
-export async function updateSettings(patch: Partial<Settings>): Promise<Settings> {
+export async function updateSettings(
+  patch: Partial<Settings>,
+): Promise<Settings> {
   const current = await getSettings();
-  const next: Settings = { ...current, ...patch, updatedAt: new Date().toISOString() };
-  await writeJson(SETTINGS_FILE, next);
+  const next: Settings = {
+    ...current,
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  };
+  await redis<void>(["SET", ["settings", JSON.stringify(next)]]);
   return next;
 }
