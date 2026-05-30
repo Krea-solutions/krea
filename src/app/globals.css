@@ -33,6 +33,17 @@ body.cursor-ready {
   cursor: none;
 }
 @media (max-width: 900px) { .cursor, .cursor-ring { display: none; } }
+.font-serif em,
+.font-serif i,
+.italic,
+em {
+  font-style: italic;
+  letter-spacing: normal;
+  font-kerning: none;
+  -webkit-font-feature-settings: normal;
+  font-feature-settings: normal;
+  font-variant-ligatures: none;
+}
 
 /* Grain */
 body::before {
