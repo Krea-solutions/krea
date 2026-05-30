@@ -7,8 +7,7 @@ export default function Philosophy({ t }: { t: any }) {
     if (!cvs) return;
     const ctx = cvs.getContext("2d")!;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0,
-      h = 0;
+    let w = 0, h = 0;
     let animationFrameId = 0;
     let isVisible = true;
     const resize = () => {
@@ -25,16 +24,9 @@ export default function Philosophy({ t }: { t: any }) {
     const ro = new ResizeObserver(resize);
     ro.observe(cvs);
     let t0 = 0;
-    const colors = [
-      "rgba(77,200,255,0.18)",
-      "rgba(37,150,255,0.12)",
-      "rgba(255,122,45,0.08)",
-    ];
+    const colors = ["rgba(77,200,255,0.18)", "rgba(37,150,255,0.12)", "rgba(255,122,45,0.08)"];
     const animate = () => {
-      if (!isVisible) {
-        animationFrameId = 0;
-        return;
-      }
+      if (!isVisible) { animationFrameId = 0; return; }
       t0 += 0.005;
       ctx.fillStyle = "rgba(5,9,15,0.3)";
       ctx.fillRect(0, 0, w, h);
@@ -62,14 +54,8 @@ export default function Philosophy({ t }: { t: any }) {
       className="px-5 md:px-10 py-28 md:py-48 text-center border-y border-line relative overflow-hidden"
       id="about"
     >
-      <canvas
-        ref={cvsRef}
-        className="absolute inset-0 w-full h-full z-0 opacity-50 pointer-events-none"
-      />
-      <div
-        className="relative z-[1] mx-auto reveal"
-        style={{ width: "90%", maxWidth: "1100px" }}
-      >
+      <canvas ref={cvsRef} className="absolute inset-0 w-full h-full z-0 opacity-50 pointer-events-none" />
+      <div className="relative z-[1] mx-auto reveal" style={{ width: "90%", maxWidth: "1100px" }}>
         <p
           className="font-serif font-light leading-[1.3] tracking-[-0.01em]"
           style={{ fontSize: "clamp(22px, 3vw, 46px)" }}

@@ -16,39 +16,39 @@
     "title2": "build",
     "title3": "what",
     "title4": "isn't built.",
-    "lead": "KREA is a creative technology studio. We build brands, products and digital worlds at the intersection of art, code and intelligence.",
+    "lead": "A creative technology studio. We make brands, products and digital worlds. We work where art meets code and intelligence.",
     "stats": { "projects": "Projects", "awards": "Awards", "clients": "Clients" },
-    "cta": "Selected work"
+    "cta": "See the work"
   },
   "work": {
     "label": "Work / 001",
-    "title": "Projects that speak for us."
+    "title": "Projects people know us by."
   },
   "services": {
     "label": "Capabilities / 002",
-    "title": "End-to-end, from idea to launch.",
+    "title": "We take a project from idea to launch.",
     "items": {
-      "brand": { "title": "Brand & <em>Identity</em>", "desc": "Strategy, naming, visual system and tone of voice. From idea to a finished system." },
-      "product": { "title": "Product <em>Design</em>", "desc": "Interfaces with character and internal logic. From first sketch to release." },
-      "motion": { "title": "Motion <em>Design</em>", "desc": "Living, cinematic movement. It brings interfaces to life and makes brands tangible." },
-      "ai": { "title": "AI <em>Solutions</em>", "desc": "Generative tools, smart flows, living interfaces. Technology that stays beautiful." },
-      "web": { "title": "Web <em>Engineering</em>", "desc": "Next.js, edge infrastructure, CMS, WebGL. Sites built for speed and the long run." },
-      "three": { "title": "3D & <em>Interactive</em>", "desc": "Three.js, shaders, real-time rendering. Worlds you step into right in the browser." }
+      "brand": { "title": "Brand & <em>Identity</em>", "desc": "Strategy, naming, visual system, tone of voice. We carry it from idea to a working system." },
+      "product": { "title": "Product <em>Design</em>", "desc": "We draw interfaces with character and clear logic. From first sketch to release." },
+      "motion": { "title": "Motion <em>Design</em>", "desc": "We move the interface until the brand feels alive. Cinematic, never noisy." },
+      "ai": { "title": "AI <em>Solutions</em>", "desc": "We build generative tools and smart flows. The interface stays clear to a human." },
+      "web": { "title": "Web <em>Engineering</em>", "desc": "Next.js, edge, CMS, WebGL. We ship sites that load fast and last." },
+      "three": { "title": "3D & <em>Interactive</em>", "desc": "Three.js, shaders, real-time rendering. You step into the scene right in the browser." }
     }
   },
   "philosophy": {
-    "quote": "Design is the last bridge between intent and outcome. We build it like infrastructure and treat it like cinema.",
+    "quote": "Design stands between intent and outcome. We build it like engineers and shoot it like film.",
     "attr": "— KREA Manifesto, Vol. III"
   },
   "process": {
     "label": "Process / 003",
-    "title": "From first signal to finished product.",
+    "title": "From first call to finished product.",
     "steps": [
-      { "name": "Listen & <em>immerse</em>", "desc": "Conversation, audit, diagnosis. Before a single pixel moves, the essence is already clear." },
-      { "name": "Set the <em>direction</em>", "desc": "Positioning, brand story, principles. The team aligns on one course and holds it." },
-      { "name": "Design <em>in motion</em>", "desc": "Identity, screens and motion language are born together. Static is dead — we design movement from day one." },
-      { "name": "Build & <em>ship</em>", "desc": "All engineering is ours: Next.js, edge, 3D. Design and code move side by side until the comp matches to the pixel." },
-      { "name": "Grow it <em>further</em>", "desc": "We don't disappear after launch. Quarterly reviews, evolving systems, a long-term partnership." }
+      { "name": "Listen and <em>dig in</em>", "desc": "We talk, audit, diagnose. By the first pixel we know what we're making and why." },
+      { "name": "Set the <em>direction</em>", "desc": "We fix positioning, brand story, principles. Then we hold that course." },
+      { "name": "Draw <em>in motion</em>", "desc": "Identity, screens and animation come together. We build movement in from day one." },
+      { "name": "Build and <em>ship</em>", "desc": "We write the code ourselves: Next.js, edge, 3D. Designer and developer sit together until the comp matches to the pixel." },
+      { "name": "Carry it <em>forward</em>", "desc": "We don't vanish after launch. We watch the metrics, refine, grow the product quarter by quarter." }
     ]
   },
   "metrics": {
@@ -57,22 +57,22 @@
       { "value": "142", "label": "Projects across industries", "labelRu": "Проектов в разных сферах" },
       { "value": "37", "label": "International awards since 2019", "labelRu": "Наград с 2019 года" },
       { "value": "98%", "label": "Client retention after first project", "labelRu": "Клиентов остаются после первого проекта" },
-      { "value": "100M+", "label": "Monthly users of our work", "labelRu": "Человек ежемесячно пользуются нашими продуктами" }
+      { "value": "100M+", "label": "Monthly users of our work", "labelRu": "Человек в месяц пользуются нашими продуктами" }
     ]
   },
   "testi": {
     "label": "Words / 004",
-    "title": "What partners say after launch.",
+    "title": "What clients say after launch.",
     "items": [
-      { "q": "KREA didn't just refresh our product — they changed how people relate to money. Every screen is considered down to the detail.", "n": "M. Krasnov", "r": "Halcyon · Product" },
-      { "q": "The craft is rare. They engineer motion the way Pixar builds a frame: calculation behind every move.", "n": "A. Volkov", "r": "Aurora · Founder" },
-      { "q": "We've worked with the top studios in London and New York. KREA is another league. Quieter, sharper, closer to an atelier.", "n": "E. Saito", "r": "Nokto · Art Director" }
+      { "q": "KREA didn't just refresh our product. They changed how people handle money. Every screen is thought through to the detail.", "n": "M. Krasnov", "r": "Halcyon · Product" },
+      { "q": "Few teams work this clean. They build motion the way Pixar builds a frame: calculation behind every move.", "n": "A. Volkov", "r": "Aurora · Founder" },
+      { "q": "We've worked with top studios in London and New York. KREA stands apart. Quieter, sharper, closer to an atelier than an agency.", "n": "E. Saito", "r": "Nokto · Art Director" }
     ]
   },
   "form": {
     "label": "Get in touch / 005",
     "title": "Let's make something worth it.",
-    "lead": "Tell us about your task. We'll reply within a business day.",
+    "lead": "Tell us about the task. We'll reply within a day.",
     "name": "Name",
     "namePh": "Your name",
     "company": "Company",
@@ -86,10 +86,10 @@
     "submit": "Send",
     "sending": "Sending…",
     "successTitle": "Request sent",
-    "successText": "Thank you for reaching out. We'll get back to you within a business day.",
+    "successText": "Thanks for writing. We'll get back within a business day.",
     "successAgain": "Send another",
-    "error": "Couldn't send. Please try again or contact us directly.",
-    "required": "Please fill in the required fields",
+    "error": "Didn't send. Try again or contact us directly.",
+    "required": "Fill in the required fields",
     "invalidContact": "Enter a valid email or @telegram"
   },
   "footer": {
@@ -101,6 +101,6 @@
     "press": "Press kit",
     "connect": "Connect",
     "rights": "All rights reserved",
-    "built": "Made with intention"
+    "built": "Made with care"
   }
 }

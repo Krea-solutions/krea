@@ -179,14 +179,14 @@ export default function Hero({ t }: { t: any }) {
           </div>
         </div>
 
-        <h1 className="font-serif font-light text-[clamp(44px,15vw,200px)] md:text-[13vw] leading-[0.9] md:leading-[0.88] tracking-[-0.02em] md:tracking-[-0.04em] mb-12 md:mb-16">
+        <h1 className="font-serif font-light text-[clamp(40px,13vw,200px)] md:text-[13vw] leading-[1.0] md:leading-[0.9] tracking-[-0.01em] md:tracking-[-0.03em] mb-12 md:mb-16">
           {[t.title1, t.title2, t.title3, t.title4].map((word, i) => {
             const isCyan = i === 1;
             const isOrange = i === 3;
             return (
-              <span key={i} className="word-mask mr-[0.18em]">
+              <span key={i} className="word-mask block md:inline-block md:mr-[0.22em]">
                 <span
-                  className={`${isCyan ? "text-cyan italic" : isOrange ? "text-accent italic" : ""}`}
+                  className={`inline-block ${isCyan ? "text-cyan italic pr-[0.08em]" : isOrange ? "text-accent italic pr-[0.08em]" : ""}`}
                   style={{ animationDelay: `${0.2 + i * 0.12}s` }}
                 >
                   {word}
