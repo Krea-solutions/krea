@@ -134,3 +134,26 @@ em.ital, .ital { font-style: italic; }
     transition: none;
   }
 }
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+  h1, h2, h3,
+  .font-serif {
+    letter-spacing: 0 !important;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+  /* italic display words overflowing on narrow screens */
+  .font-serif em,
+  .font-serif .italic,
+  .italic {
+    letter-spacing: 0 !important;
+  }
+}
